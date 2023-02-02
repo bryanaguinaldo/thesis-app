@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, Pressable } from "react-native";
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import Banner from "../components/Banner";
 import Question from "../components/Question";
 import axios, { Axios } from "axios";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Questions({ route, navigation }) {
+    const isFocused = useIsFocused();
     const { subject } = route.params;
     const [data, setData] = useState([]);
     const url = "http://192.168.1.16:8000/api/entries";
@@ -26,8 +30,21 @@ export default function Questions({ route, navigation }) {
     };
 
     useEffect(() => {
-        fetch();
-    }, []);
+        isFocused && fetch();
+        navigation.setOptions({
+            headerRight: () => (
+                <Pressable
+                    onPress={() =>
+                        navigation.navigate("AddQuestions", {
+                            subject: subject,
+                        })
+                    }
+                >
+                    <FontAwesomeIcon icon={faAdd} size={22} />
+                </Pressable>
+            ),
+        });
+    }, [navigation, isFocused]);
 
     return (
         <View className="h-full w-full">
@@ -51,6 +68,7 @@ export default function Questions({ route, navigation }) {
                                     navigation.navigate("Question", {
                                         qQuestion: d.attributes.question,
                                         qAnswer: d.attributes.answer,
+                                        qId: d.id,
                                     })
                                 }
                             />

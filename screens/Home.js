@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, Pressable } from "react-native";
 
 import Banner from "../components/Banner";
 import Subject from "../components/Subject";
 import Question from "../components/Question";
 import axios, { Axios } from "axios";
-import { faAtom, faSpellCheck, faAdd } from "@fortawesome/free-solid-svg-icons";
+import {
+    faAtom,
+    faSpellCheck,
+    faAdd,
+    faArrowsRotate,
+} from "@fortawesome/free-solid-svg-icons";
+import { useIsFocused } from "@react-navigation/native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 export default function Home({ navigation }) {
+    const isFocused = useIsFocused();
     const [data, setData] = useState([]);
     const [englishCount, setEnglishCount] = useState(0);
     const [scienceCount, setScienceCount] = useState(0);
@@ -40,8 +48,8 @@ export default function Home({ navigation }) {
     };
 
     useEffect(() => {
-        fetch();
-    }, []);
+        isFocused && fetch();
+    }, [isFocused]);
 
     return (
         <View className="h-full w-full">
@@ -51,9 +59,27 @@ export default function Home({ navigation }) {
                     description="Learning Assistant Device Mobile App!"
                 />
                 <View className="mt-4 px-5">
-                    <Text className="mb-2 text-sm uppercase text-slate-500 font-bold">
-                        Subjects
-                    </Text>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            width: "100%",
+                        }}
+                    >
+                        <Text className="mb-2 text-sm uppercase text-slate-500 font-bold flex-start">
+                            Subjects
+                        </Text>
+                        <Pressable className="absolute right-0" onPress={fetch}>
+                            <Text className="mb-2 text-sm uppercase text-slate-500 font-bold float-end">
+                                <FontAwesomeIcon
+                                    icon={faArrowsRotate}
+                                    size={12}
+                                    color="#64748b"
+                                />{" "}
+                                Refresh
+                            </Text>
+                        </Pressable>
+                    </View>
                     <Subject
                         title="English"
                         entries={englishCount}
@@ -84,15 +110,6 @@ export default function Home({ navigation }) {
                             })
                         }
                     />
-                    {/* {data.map((d) => {
-                        return (
-                            <Question
-                                subject={d.attributes.subject}
-                                question={d.attributes.question}
-                                key={d.id}
-                            />
-                        );
-                    })} */}
                 </View>
             </ScrollView>
         </View>
