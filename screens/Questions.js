@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView, Pressable } from "react-native";
+import {
+    Text,
+    View,
+    ScrollView,
+    Pressable,
+    RefreshControl,
+} from "react-native";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
@@ -9,6 +15,8 @@ import axios, { Axios } from "axios";
 import { useIsFocused } from "@react-navigation/native";
 
 export default function Questions({ route, navigation }) {
+    const [refreshing, setRefreshing] = React.useState(false);
+
     const isFocused = useIsFocused();
     const { subject } = route.params;
     const [data, setData] = useState([]);
@@ -46,9 +54,24 @@ export default function Questions({ route, navigation }) {
         });
     }, [navigation, isFocused]);
 
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 2000);
+        fetch();
+    }, []);
+
     return (
         <View className="h-full w-full">
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
                 <Banner
                     title={subject}
                     description={
@@ -69,6 +92,7 @@ export default function Questions({ route, navigation }) {
                                         qQuestion: d.attributes.question,
                                         qAnswer: d.attributes.answer,
                                         qId: d.id,
+                                        qImage: d.attributes.file,
                                     })
                                 }
                             />

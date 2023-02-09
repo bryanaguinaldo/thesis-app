@@ -36,13 +36,6 @@ export default function Subject(props) {
                                 {props.entries} / 20
                             </Text>
                         </View>
-                        {/* <Text className="text-slate-700">
-                            {props.entries == null
-                                ? "0 entries"
-                                : props.entries == 1
-                                ? props.entries + " entry"
-                                : props.entries + " entries"}
-                        </Text> */}
                         <View className="mt-1 h-2 w-5/6 rounded-full bg-slate-200">
                             <View
                                 style={{

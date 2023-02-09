@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable, Image } from "react-native";
 import axios, { Axios } from "axios";
 
 import Button from "../components/Button";
@@ -8,7 +8,8 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 export default function Questions({ route, navigation }) {
-    const { qQuestion, qAnswer, qId } = route.params;
+    const { qQuestion, qAnswer, qId, qImage } = route.params;
+    const imageUrl = "http://192.168.1.16:8000/storage/static/images/" + qImage;
 
     const url = "http://192.168.1.16:8000/api/entries";
 
@@ -55,6 +56,21 @@ export default function Questions({ route, navigation }) {
                         </Text>
                     </View>
                 </View>
+                {qImage == null ? null : (
+                    <View className="flex items-center mt-4 rounded-lg w-full">
+                        <Image
+                            className="rounded-lg shadow-sm"
+                            style={{
+                                width: "69%",
+                                height: undefined,
+                                aspectRatio: 1,
+                            }}
+                            source={{
+                                uri: imageUrl,
+                            }}
+                        />
+                    </View>
+                )}
             </View>
         </View>
     );

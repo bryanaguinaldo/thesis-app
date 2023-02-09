@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView, Pressable } from "react-native";
+import {
+    Text,
+    View,
+    ScrollView,
+    Pressable,
+    RefreshControl,
+} from "react-native";
 
 import Banner from "../components/Banner";
 import Subject from "../components/Subject";
@@ -15,6 +21,16 @@ import { useIsFocused } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 export default function Home({ navigation }) {
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 1000);
+        fetch();
+    }, []);
+
     const isFocused = useIsFocused();
     const [data, setData] = useState([]);
     const [englishCount, setEnglishCount] = useState(0);
@@ -53,33 +69,22 @@ export default function Home({ navigation }) {
 
     return (
         <View className="h-full w-full">
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
                 <Banner
                     title="Welcome!"
                     description="Learning Assistant Device Mobile App!"
                 />
                 <View className="mt-4 px-5">
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            width: "100%",
-                        }}
-                    >
-                        <Text className="mb-2 text-sm uppercase text-slate-500 font-bold flex-start">
-                            Subjects
-                        </Text>
-                        <Pressable className="absolute right-0" onPress={fetch}>
-                            <Text className="mb-2 text-sm uppercase text-slate-500 font-bold float-end">
-                                <FontAwesomeIcon
-                                    icon={faArrowsRotate}
-                                    size={12}
-                                    color="#64748b"
-                                />{" "}
-                                Refresh
-                            </Text>
-                        </Pressable>
-                    </View>
+                    <Text className="mb-2 text-sm uppercase text-slate-500 font-bold flex-start">
+                        Subjects
+                    </Text>
                     <Subject
                         title="English"
                         entries={englishCount}
