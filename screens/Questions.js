@@ -20,7 +20,7 @@ export default function Questions({ route, navigation }) {
     const isFocused = useIsFocused();
     const { subject } = route.params;
     const [data, setData] = useState([]);
-    const url = "http://192.168.1.16:8000/api/entries";
+    const url = "http://192.168.43.203:8000/api/entries";
 
     const fetch = async () => {
         const response = await axios(url, {
@@ -37,17 +37,24 @@ export default function Questions({ route, navigation }) {
             .catch((error) => alert(error));
     };
 
+    const navigateToAddQuestions = () => {
+        alert(data.length);
+        if (data.length >= 20) {
+            alert(
+                "You have reached the maximum allowed questions for this subject."
+            );
+        } else {
+            navigation.navigate("AddQuestions", {
+                subject: subject,
+            });
+        }
+    };
+
     useEffect(() => {
         isFocused && fetch();
         navigation.setOptions({
             headerRight: () => (
-                <Pressable
-                    onPress={() =>
-                        navigation.navigate("AddQuestions", {
-                            subject: subject,
-                        })
-                    }
-                >
+                <Pressable onPress={navigateToAddQuestions}>
                     <FontAwesomeIcon icon={faAdd} size={22} />
                 </Pressable>
             ),

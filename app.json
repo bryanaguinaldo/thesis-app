@@ -30,10 +30,17 @@
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#FFFFFF"
-            }
+            },
+            "permissions": ["android.permission.RECORD_AUDIO"],
+            "package": "com.bryanagui.mobileapp"
         },
         "web": {
             "favicon": "./assets/favicon.png"
+        },
+        "extra": {
+            "eas": {
+                "projectId": "630e682d-184d-431b-899b-50564369be02"
+            }
         }
     }
 }

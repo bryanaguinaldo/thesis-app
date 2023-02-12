@@ -11,57 +11,61 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function AddQuestions({ route, navigation }) {
     const { subject } = route.params;
-    const [question, setQuestion] = useState(null);
-    const [answer, setAnswer] = useState(null);
+    const [question, setQuestion] = useState("");
+    const [answer, setAnswer] = useState("");
     const [image, setImage] = useState(null);
 
-    const url = "http://192.168.1.16:8000/api/entries";
+    const url = "http://192.168.43.203:8000/api/entries";
 
     const formData = new FormData();
 
     const handleAddQuestion = async () => {
-        formData.append("subject", subject);
-        formData.append("question", question);
-        formData.append("answer", answer);
-        if (image != null) {
-            let uri = image.uri;
-            let fileName = uri.split("/").pop();
+        if (!question || !answer) {
+            alert("Please fill out required fields.");
+        } else {
+            formData.append("subject", subject);
+            formData.append("question", question);
+            formData.append("answer", answer);
+            if (image != null) {
+                let uri = image.uri;
+                let fileName = uri.split("/").pop();
 
-            let match = /\.(\w+)$/.exec(fileName);
-            let type = match ? `image/${match[1]}` : `image`;
-            formData.append("file", { uri: uri, name: fileName, type });
-        }
+                let match = /\.(\w+)$/.exec(fileName);
+                let type = match ? `image/${match[1]}` : `image`;
+                formData.append("file", { uri: uri, name: fileName, type });
+            }
 
-        const response = await axios({
-            method: "post",
-            url: url,
-            data: formData,
-            headers: { "Content-Type": "multipart/form-data" },
-        })
-            .then(function (response) {
-                console.log(response);
+            const response = await axios({
+                method: "post",
+                url: url,
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" },
             })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        alert("Question successfully added... yata?");
-        navigation.goBack();
+                .then(function (response) {
+                    alert("Question successfully added.");
+                    navigation.goBack();
+                })
+                .catch(function (error) {
+                    alert(error.response.data.message);
+                });
+        }
     };
 
     const handleImagePicker = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
+        }).catch(function (error) {
+            console.log(error);
         });
-
-        console.log(result.assets[0]);
 
         if (!result.canceled) {
             setImage(result.assets[0]);
+        } else {
+            return 0;
         }
     };
 
@@ -78,13 +82,13 @@ export default function AddQuestions({ route, navigation }) {
             <View className="mt-4 px-5">
                 <View className="py-2">
                     <Text className="text-sm uppercase text-slate-700 font-bold">
-                        Question
+                        Question *
                     </Text>
                     <TextInput onChangeText={(val) => setQuestion(val)} />
                 </View>
                 <View className="py-2">
                     <Text className="text-sm uppercase text-slate-700 font-bold">
-                        Answer
+                        Answer *
                     </Text>
                     <TextInput onChangeText={(val) => setAnswer(val)} />
                 </View>

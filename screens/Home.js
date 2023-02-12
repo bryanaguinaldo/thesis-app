@@ -36,7 +36,7 @@ export default function Home({ navigation }) {
     const [englishCount, setEnglishCount] = useState(0);
     const [scienceCount, setScienceCount] = useState(0);
     const [mathCount, setMathCount] = useState(0);
-    const url = "http://192.168.1.16:8000/api/entries";
+    const url = "http://192.168.43.203:8000/api/entries";
 
     const fetch = async () => {
         const response = await axios(url, {

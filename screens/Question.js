@@ -9,9 +9,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 export default function Questions({ route, navigation }) {
     const { qQuestion, qAnswer, qId, qImage } = route.params;
-    const imageUrl = "http://192.168.1.16:8000/storage/static/images/" + qImage;
+    const imageUrl =
+        "http://192.168.43.203:8000/storage/static/images/" + qImage;
 
-    const url = "http://192.168.1.16:8000/api/entries";
+    const url = "http://192.168.43.203:8000/api/entries";
 
     const handleDeleteQuestion = async () => {
         const response = await axios
