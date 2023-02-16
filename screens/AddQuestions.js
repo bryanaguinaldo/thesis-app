@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, Image } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import { Alert } from "react-native";
 
@@ -13,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUrl } from "../redux/actions";
+import UploadImageButton from "../components/UploadImageButton";
 
 export default function AddQuestions({ route, navigation }) {
     const { subject } = route.params;
@@ -20,6 +21,8 @@ export default function AddQuestions({ route, navigation }) {
     const [answer, setAnswer] = useState("");
     const [image, setImage] = useState(null);
     const [spinner, setSpinner] = useState(false);
+    const [isFileChosen, setIsFileChosen] = useState(false);
+    const [imageUrl, setImageUrl] = useState("");
 
     // const url = "http://192.168.43.203:8000/api/entries";
     const { url } = useSelector((state) => state.urlReducer);
@@ -61,6 +64,7 @@ export default function AddQuestions({ route, navigation }) {
                 })
                 .catch(function (error) {
                     alert(error.response.data.message);
+                    setSpinner(false);
                 });
         }
     };
@@ -71,13 +75,15 @@ export default function AddQuestions({ route, navigation }) {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 1,
+            quality: 0.5,
         }).catch(function (error) {
             console.log(error);
         });
 
         if (!result.canceled) {
             setImage(result.assets[0]);
+            setImageUrl(result.assets[0].uri);
+            setIsFileChosen(true);
         } else {
             return 0;
         }
@@ -91,6 +97,13 @@ export default function AddQuestions({ route, navigation }) {
                 textStyle={{ color: "#fff" }}
                 overlayColor="rgba(0, 0, 0, 0.30)"
             />
+            <View className="absolute inset-x-0 bottom-0 flex justify-center mb-6 px-5">
+                <Button
+                    title="Submit"
+                    onPress={handleAddQuestion}
+                    color="bg-blue-500"
+                />
+            </View>
             <Banner
                 title="Add a Question"
                 description={
@@ -116,14 +129,27 @@ export default function AddQuestions({ route, navigation }) {
                     <Text className="text-sm uppercase text-slate-700 font-bold">
                         Attachment
                     </Text>
-                    <Button
+                    {!isFileChosen ? (
+                        <Text className="my-2">No File Chosen</Text>
+                    ) : (
+                        <View className="my-4 rounded-lg w-full">
+                            <Image
+                                className="rounded-lg shadow-sm"
+                                style={{
+                                    width: "30%",
+                                    height: undefined,
+                                    aspectRatio: 1,
+                                }}
+                                source={{
+                                    uri: imageUrl,
+                                }}
+                            />
+                        </View>
+                    )}
+                    <UploadImageButton
                         title="Choose an Image"
                         onPress={handleImagePicker}
                     />
-                    <Text>No file chosen.</Text>
-                </View>
-                <View className="py-2">
-                    <Button title="Submit" onPress={handleAddQuestion} />
                 </View>
             </View>
         </View>

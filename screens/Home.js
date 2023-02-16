@@ -69,7 +69,12 @@ export default function Home({ navigation }) {
                 setScienceCount(sc.length);
                 setSpinner(false);
             })
-            .catch((error) => alert(error));
+            .catch((error) => {
+                alert(
+                    "Could not connect to online server. Please try again later or use the offline function."
+                );
+                setSpinner(false);
+            });
     };
 
     useEffect(() => {

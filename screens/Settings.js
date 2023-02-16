@@ -58,7 +58,7 @@ export default function Settings({ route, navigation }) {
                 })
                 .catch((error) => {
                     alert(
-                        "Unable to connect to server. Please check your input."
+                        "Unable to connect to server. Please check your internet connection."
                     );
                     setSpinner(false);
                 });

@@ -46,6 +46,9 @@ export default function App() {
                     <Stack.Screen
                         name="AddQuestions"
                         component={AddQuestions}
+                        options={{
+                            title: "Add a Question",
+                        }}
                     />
                     <Stack.Screen name="Settings" component={Settings} />
                 </Stack.Navigator>

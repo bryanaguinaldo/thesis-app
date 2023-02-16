@@ -82,7 +82,7 @@ export default function Questions({ route, navigation }) {
                 textStyle={{ color: "#fff" }}
                 overlayColor="rgba(0, 0, 0, 0.30)"
             />
-            <View className="absolute inset-x-0 bottom-0 flex justify-center mb-6 px-5">
+            <View className="py-4 absolute inset-x-0 bottom-0 flex justify-center mb-6 px-5">
                 <Button
                     title="Delete Question"
                     onPress={handleDeleteQuestion}
