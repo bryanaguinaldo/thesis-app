@@ -9,13 +9,17 @@ import axios, { Axios } from "axios";
 
 import * as ImagePicker from "expo-image-picker";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setUrl } from "../redux/actions";
+
 export default function AddQuestions({ route, navigation }) {
     const { subject } = route.params;
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
     const [image, setImage] = useState(null);
 
-    const url = "http://192.168.43.203:8000/api/entries";
+    // const url = "http://192.168.43.203:8000/api/entries";
+    const { url } = useSelector((state) => state.urlReducer);
 
     const formData = new FormData();
 
@@ -37,7 +41,7 @@ export default function AddQuestions({ route, navigation }) {
 
             const response = await axios({
                 method: "post",
-                url: url,
+                url: url + "api/entries",
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             })

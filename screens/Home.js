@@ -16,9 +16,13 @@ import {
     faSpellCheck,
     faAdd,
     faArrowsRotate,
+    faCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+
+import { useSelector, useDispatch } from "react-redux";
+import { setUrl } from "../redux/actions";
 
 export default function Home({ navigation }) {
     const [refreshing, setRefreshing] = React.useState(false);
@@ -36,10 +40,11 @@ export default function Home({ navigation }) {
     const [englishCount, setEnglishCount] = useState(0);
     const [scienceCount, setScienceCount] = useState(0);
     const [mathCount, setMathCount] = useState(0);
-    const url = "http://192.168.43.203:8000/api/entries";
+    // const url = "http://192.168.43.203:8000/api/entries";
+    const { url } = useSelector((state) => state.urlReducer);
 
     const fetch = async () => {
-        const response = await axios(url, {
+        const response = await axios(url + "api/entries", {
             headers: {
                 Accept: "application/json",
             },
@@ -65,7 +70,14 @@ export default function Home({ navigation }) {
 
     useEffect(() => {
         isFocused && fetch();
-    }, [isFocused]);
+        navigation.setOptions({
+            headerRight: () => (
+                <Pressable onPress={() => navigation.navigate("Settings")}>
+                    <FontAwesomeIcon icon={faCog} size={22} />
+                </Pressable>
+            ),
+        });
+    }, [isFocused, navigation]);
 
     return (
         <View className="h-full w-full">

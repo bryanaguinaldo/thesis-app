@@ -14,16 +14,20 @@ import Question from "../components/Question";
 import axios, { Axios } from "axios";
 import { useIsFocused } from "@react-navigation/native";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setUrl } from "../redux/actions";
+
 export default function Questions({ route, navigation }) {
     const [refreshing, setRefreshing] = React.useState(false);
 
     const isFocused = useIsFocused();
     const { subject } = route.params;
     const [data, setData] = useState([]);
-    const url = "http://192.168.43.203:8000/api/entries";
+    // const url = "http://192.168.43.203:8000/api/entries";
+    const { url } = useSelector((state) => state.urlReducer);
 
     const fetch = async () => {
-        const response = await axios(url, {
+        const response = await axios(url + "api/entries", {
             headers: {
                 Accept: "application/json",
             },
@@ -37,17 +41,27 @@ export default function Questions({ route, navigation }) {
             .catch((error) => alert(error));
     };
 
-    const navigateToAddQuestions = () => {
-        alert(data.length);
-        if (data.length >= 20) {
-            alert(
-                "You have reached the maximum allowed questions for this subject."
-            );
-        } else {
-            navigation.navigate("AddQuestions", {
-                subject: subject,
-            });
-        }
+    const navigateToAddQuestions = async () => {
+        const response = await axios(url + "api/entries", {
+            headers: {
+                Accept: "application/json",
+            },
+        })
+            .then((res) => {
+                const result = res.data.data.filter(
+                    (r) => r.attributes.subject === subject
+                );
+                if (result.length >= 20) {
+                    alert(
+                        "You have reached the maximum allowed questions for this subject."
+                    );
+                } else {
+                    navigation.navigate("AddQuestions", {
+                        subject: subject,
+                    });
+                }
+            })
+            .catch((error) => alert(error));
     };
 
     useEffect(() => {
@@ -65,7 +79,7 @@ export default function Questions({ route, navigation }) {
         setRefreshing(true);
         setTimeout(() => {
             setRefreshing(false);
-        }, 2000);
+        }, 1000);
         fetch();
     }, []);
 

@@ -7,25 +7,26 @@ import Button from "../components/Button";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setUrl } from "../redux/actions";
+
 export default function Questions({ route, navigation }) {
     const { qQuestion, qAnswer, qId, qImage } = route.params;
-    const imageUrl =
-        "http://192.168.43.203:8000/storage/static/images/" + qImage;
+    const { url } = useSelector((state) => state.urlReducer);
+    const imageUrl = url + "storage/static/images/" + qImage;
 
-    const url = "http://192.168.43.203:8000/api/entries";
+    // const url = "http://192.168.43.203:8000/api/entries";
 
     const handleDeleteQuestion = async () => {
         const response = await axios
-            .delete(url + "/" + qId)
+            .delete(url + "api/entries/" + qId)
             .then(function (response) {
-                console.log(response);
+                alert("Question successfully removed.");
+                navigation.goBack();
             })
             .catch(function (error) {
-                console.log(error);
+                alert(error);
             });
-
-        alert("Question successfully removed... yata?");
-        navigation.goBack();
     };
 
     return (
