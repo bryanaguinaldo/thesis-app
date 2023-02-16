@@ -20,18 +20,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUrl } from "../redux/actions";
 
 export default function Home({ navigation }) {
     const [refreshing, setRefreshing] = React.useState(false);
+    const [spinner, setSpinner] = useState(false);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
             setRefreshing(false);
-        }, 1000);
+        }, 100);
         fetch();
     }, []);
 
@@ -44,6 +46,7 @@ export default function Home({ navigation }) {
     const { url } = useSelector((state) => state.urlReducer);
 
     const fetch = async () => {
+        setSpinner(true);
         const response = await axios(url + "api/entries", {
             headers: {
                 Accept: "application/json",
@@ -64,6 +67,7 @@ export default function Home({ navigation }) {
                 setEnglishCount(ec.length);
                 setMathCount(mc.length);
                 setScienceCount(sc.length);
+                setSpinner(false);
             })
             .catch((error) => alert(error));
     };
@@ -81,6 +85,12 @@ export default function Home({ navigation }) {
 
     return (
         <View className="h-full w-full">
+            <Spinner
+                visible={spinner}
+                textContent={"Loading..."}
+                textStyle={{ color: "#fff" }}
+                overlayColor="rgba(0, 0, 0, 0.30)"
+            />
             <ScrollView
                 refreshControl={
                     <RefreshControl

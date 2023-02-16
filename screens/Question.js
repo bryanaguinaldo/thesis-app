@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, Pressable, Image } from "react-native";
 import axios, { Axios } from "axios";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 import Button from "../components/Button";
 
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { Alert } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUrl } from "../redux/actions";
@@ -14,23 +16,72 @@ export default function Questions({ route, navigation }) {
     const { qQuestion, qAnswer, qId, qImage } = route.params;
     const { url } = useSelector((state) => state.urlReducer);
     const imageUrl = url + "storage/static/images/" + qImage;
+    const [spinner, setSpinner] = useState(false);
 
     // const url = "http://192.168.43.203:8000/api/entries";
 
     const handleDeleteQuestion = async () => {
-        const response = await axios
-            .delete(url + "api/entries/" + qId)
-            .then(function (response) {
-                alert("Question successfully removed.");
-                navigation.goBack();
-            })
-            .catch(function (error) {
-                alert(error);
-            });
+        Alert.alert(
+            "Confirm",
+            "Are you sure you want to delete this question?",
+            [
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        const deleteQuestion = async () => {
+                            setSpinner(true);
+                            const response = await axios
+                                .delete(url + "api/entries/" + qId)
+                                .then(function (response) {
+                                    new Alert.alert(
+                                        "Success",
+                                        "Question removed successfully.",
+                                        [
+                                            {
+                                                text: "Ok",
+                                                onPress: () => {
+                                                    navigation.goBack();
+                                                    setSpinner(false);
+                                                },
+                                            },
+                                        ]
+                                    );
+                                })
+                                .catch(function (error) {
+                                    Alert.alert(
+                                        "Fail",
+                                        "This question does not exist.",
+                                        [
+                                            {
+                                                text: "Ok",
+                                                onPress: () => {
+                                                    navigation.goBack();
+                                                },
+                                            },
+                                        ]
+                                    );
+                                    setSpinner(false);
+                                });
+                        };
+                        deleteQuestion();
+                    },
+                },
+                {
+                    text: "No",
+                    onPress: () => {},
+                },
+            ]
+        );
     };
 
     return (
         <View className="h-full w-full">
+            <Spinner
+                visible={spinner}
+                textContent={"Loading..."}
+                textStyle={{ color: "#fff" }}
+                overlayColor="rgba(0, 0, 0, 0.30)"
+            />
             <View className="absolute inset-x-0 bottom-0 flex justify-center mb-6 px-5">
                 <Button
                     title="Delete Question"

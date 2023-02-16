@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, ScrollView } from "react-native";
+import Spinner from "react-native-loading-spinner-overlay/lib";
+import { Alert } from "react-native";
 
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
@@ -17,6 +19,7 @@ export default function AddQuestions({ route, navigation }) {
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
     const [image, setImage] = useState(null);
+    const [spinner, setSpinner] = useState(false);
 
     // const url = "http://192.168.43.203:8000/api/entries";
     const { url } = useSelector((state) => state.urlReducer);
@@ -38,7 +41,7 @@ export default function AddQuestions({ route, navigation }) {
                 let type = match ? `image/${match[1]}` : `image`;
                 formData.append("file", { uri: uri, name: fileName, type });
             }
-
+            setSpinner(true);
             const response = await axios({
                 method: "post",
                 url: url + "api/entries",
@@ -46,8 +49,15 @@ export default function AddQuestions({ route, navigation }) {
                 headers: { "Content-Type": "multipart/form-data" },
             })
                 .then(function (response) {
-                    alert("Question successfully added.");
-                    navigation.goBack();
+                    Alert.alert("Success", "Question added successfully.", [
+                        {
+                            text: "ok",
+                            onPress: () => {
+                                navigation.goBack();
+                                setSpinner(false);
+                            },
+                        },
+                    ]);
                 })
                 .catch(function (error) {
                     alert(error.response.data.message);
@@ -75,6 +85,12 @@ export default function AddQuestions({ route, navigation }) {
 
     return (
         <View className="h-full w-full">
+            <Spinner
+                visible={spinner}
+                textContent={"Loading..."}
+                textStyle={{ color: "#fff" }}
+                overlayColor="rgba(0, 0, 0, 0.30)"
+            />
             <Banner
                 title="Add a Question"
                 description={

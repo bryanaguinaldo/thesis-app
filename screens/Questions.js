@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 import Banner from "../components/Banner";
 import Question from "../components/Question";
@@ -19,7 +20,7 @@ import { setUrl } from "../redux/actions";
 
 export default function Questions({ route, navigation }) {
     const [refreshing, setRefreshing] = React.useState(false);
-
+    const [spinner, setSpinner] = useState(false);
     const isFocused = useIsFocused();
     const { subject } = route.params;
     const [data, setData] = useState([]);
@@ -27,6 +28,7 @@ export default function Questions({ route, navigation }) {
     const { url } = useSelector((state) => state.urlReducer);
 
     const fetch = async () => {
+        setSpinner(true);
         const response = await axios(url + "api/entries", {
             headers: {
                 Accept: "application/json",
@@ -37,11 +39,13 @@ export default function Questions({ route, navigation }) {
                     (r) => r.attributes.subject === subject
                 );
                 setData(result);
+                setSpinner(false);
             })
             .catch((error) => alert(error));
     };
 
     const navigateToAddQuestions = async () => {
+        setSpinner(true);
         const response = await axios(url + "api/entries", {
             headers: {
                 Accept: "application/json",
@@ -60,6 +64,7 @@ export default function Questions({ route, navigation }) {
                         subject: subject,
                     });
                 }
+                setSpinner(false);
             })
             .catch((error) => alert(error));
     };
@@ -85,6 +90,12 @@ export default function Questions({ route, navigation }) {
 
     return (
         <View className="h-full w-full">
+            <Spinner
+                visible={spinner}
+                textContent={"Loading..."}
+                textStyle={{ color: "#fff" }}
+                overlayColor="rgba(0, 0, 0, 0.30)"
+            />
             <ScrollView
                 refreshControl={
                     <RefreshControl
