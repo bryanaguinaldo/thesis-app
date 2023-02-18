@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text, View, ScrollView, Image } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import { Alert } from "react-native";
+import { Buffer } from "buffer";
 
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
@@ -10,6 +11,8 @@ import Banner from "../components/Banner";
 import axios, { Axios } from "axios";
 
 import * as ImagePicker from "expo-image-picker";
+import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
+import * as ImageManipulator from "expo-image-manipulator";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUrl } from "../redux/actions";
@@ -43,6 +46,12 @@ export default function AddQuestions({ route, navigation }) {
 
                 let match = /\.(\w+)$/.exec(fileName);
                 let type = match ? `image/${match[1]}` : `image`;
+                console.log({
+                    uri: uri,
+                    fileName: fileName,
+                    match: match,
+                    type: type,
+                });
                 formData.append("file", { uri: uri, name: fileName, type });
             }
             return await axios({
@@ -64,7 +73,7 @@ export default function AddQuestions({ route, navigation }) {
                             {
                                 text: "ok",
                                 onPress: () => {
-                                    // navigation.goBack();
+                                    navigation.goBack();
                                     setSpinner(false);
                                 },
                             },
@@ -93,10 +102,16 @@ export default function AddQuestions({ route, navigation }) {
         });
 
         if (!result.canceled) {
-            console.log(result);
+            const resizedPhoto = await ImageManipulator.manipulateAsync(
+                result.assets[0].uri,
+                [{ resize: { width: 250, height: 250 } }],
+                { compress: 0.5, format: "jpeg" }
+            );
+
+            console.log(resizedPhoto.uri);
+
             setImage(result.assets[0]);
-            setImageUrl(result.assets[0].uri);
-            setImageBase64(result.assets[0].base64);
+            setImageUrl(resizedPhoto.uri);
             setIsFileChosen(true);
         }
         setSpinner(false);
