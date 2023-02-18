@@ -62,7 +62,7 @@ export default function AddQuestions({ route, navigation }) {
                     ]);
                 })
                 .catch(function (error) {
-                    alert(error);
+                    alert("A network error has ocurred.");
                     setSpinner(false);
                 });
         }

@@ -82,7 +82,7 @@ export default function AddQuestions({ route, navigation }) {
                 })
                 .catch(function (error) {
                     console.log(error);
-                    alert(error);
+                    alert("A network error has occured.");
                     setSpinner(false);
                 });
         }
