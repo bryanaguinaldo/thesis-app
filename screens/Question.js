@@ -55,8 +55,8 @@ export default function Questions({ route, navigation }) {
 
     const handleEditQuestion = () => {
         navigation.navigate("EditQuestion", {
-            qQuestion: qQuestion,
-            qAnswer: qAnswer,
+            qQuestion: question,
+            qAnswer: answer,
             qId: qId,
         });
     };
