@@ -41,7 +41,10 @@ export default function Questions({ route, navigation }) {
                 setData(result);
                 setSpinner(false);
             })
-            .catch((error) => alert(error));
+            .catch((error) => {
+                alert("Could not connect to server.");
+                setSpinner(false);
+            });
     };
 
     const navigateToAddQuestions = async () => {
@@ -66,7 +69,10 @@ export default function Questions({ route, navigation }) {
                 }
                 setSpinner(false);
             })
-            .catch((error) => alert(error));
+            .catch((error) => {
+                alert("Could not connect to server.");
+                setSpinner(false);
+            });
     };
 
     useEffect(() => {

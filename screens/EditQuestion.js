@@ -16,28 +16,26 @@ import { setUrl } from "../redux/actions";
 import UploadImageButton from "../components/UploadImageButton";
 
 export default function AddQuestions({ route, navigation }) {
-    const { subject } = route.params;
-    const [question, setQuestion] = useState("");
-    const [answer, setAnswer] = useState("");
+    const { subject, qQuestion, qAnswer, qId } = route.params;
+    const [question, setQuestion] = useState(qQuestion);
+    const [answer, setAnswer] = useState(qAnswer);
     const [image, setImage] = useState(null);
     const [spinner, setSpinner] = useState(false);
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [imageUrl, setImageUrl] = useState("");
-    const [imageBase64, setImageBase64] = useState("");
 
-    // const url = "http://192.168.43.203:8000/api/entries";
     const { url } = useSelector((state) => state.urlReducer);
+
+    const formData = new FormData();
 
     const handleAddQuestion = async () => {
         if (!question || !answer) {
             alert("Please fill out required fields.");
         } else {
-            setSpinner(true);
-            const formData = new FormData();
             formData.append("subject", subject);
             formData.append("question", question);
             formData.append("answer", answer);
-            if (image !== null) {
+            if (image != null) {
                 let uri = image.uri;
                 let fileName = uri.split("/").pop();
 
@@ -45,34 +43,25 @@ export default function AddQuestions({ route, navigation }) {
                 let type = match ? `image/${match[1]}` : `image`;
                 formData.append("file", { uri: uri, name: fileName, type });
             }
-            return await axios({
+            setSpinner(true);
+            const response = await axios({
                 method: "post",
-                url: url + "api/entries",
+                url: url + "api/entries/update/" + qId,
                 data: formData,
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "multipart/form-data",
-                },
+                headers: { "Content-Type": "multipart/form-data" },
             })
                 .then(function (response) {
-                    console.log(response);
-                    if (response.data.status == "fail") {
-                        Alert.alert("Fail", response.data.message);
-                        setSpinner(false);
-                    } else {
-                        Alert.alert("Success", "Question added successfully.", [
-                            {
-                                text: "ok",
-                                onPress: () => {
-                                    // navigation.goBack();
-                                    setSpinner(false);
-                                },
+                    Alert.alert("Success", "Question updated successfully.", [
+                        {
+                            text: "ok",
+                            onPress: () => {
+                                navigation.goBack();
+                                setSpinner(false);
                             },
-                        ]);
-                    }
+                        },
+                    ]);
                 })
                 .catch(function (error) {
-                    console.log(error);
                     alert(error);
                     setSpinner(false);
                 });
@@ -81,25 +70,22 @@ export default function AddQuestions({ route, navigation }) {
 
     const handleImagePicker = async () => {
         // No permissions request is necessary for launching the image library
-        setSpinner(true);
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 1,
-            base64: true,
+            quality: 0.5,
         }).catch(function (error) {
             console.log(error);
         });
 
         if (!result.canceled) {
-            console.log(result);
             setImage(result.assets[0]);
             setImageUrl(result.assets[0].uri);
-            setImageBase64(result.assets[0].base64);
             setIsFileChosen(true);
+        } else {
+            return 0;
         }
-        setSpinner(false);
     };
 
     return (
@@ -123,20 +109,26 @@ export default function AddQuestions({ route, navigation }) {
                     <Text className="text-sm uppercase text-slate-700 font-bold">
                         Question *
                     </Text>
-                    <TextInput onChangeText={(val) => setQuestion(val)} />
+                    <TextInput
+                        value={question}
+                        onChangeText={(val) => setQuestion(val)}
+                    />
                 </View>
                 <View className="py-2">
                     <Text className="text-sm uppercase text-slate-700 font-bold">
                         Answer *
                     </Text>
-                    <TextInput onChangeText={(val) => setAnswer(val)} />
+                    <TextInput
+                        value={answer}
+                        onChangeText={(val) => setAnswer(val)}
+                    />
                 </View>
                 <View className="py-2">
                     <Text className="text-sm uppercase text-slate-700 font-bold">
                         Attachment
                     </Text>
                     {!isFileChosen ? (
-                        <Text className="my-2">No File Chosen</Text>
+                        <Text className="my-2">No File Chosen </Text>
                     ) : (
                         <View className="my-4 rounded-lg w-full">
                             <Image

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Pressable, Image } from "react-native";
+import { Text, View, Pressable, Image, ScrollView } from "react-native";
 import axios, { Axios } from "axios";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
@@ -11,14 +11,55 @@ import { Alert } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUrl } from "../redux/actions";
+import DeleteButton from "../components/DeleteButton";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Questions({ route, navigation }) {
     const { qQuestion, qAnswer, qId, qImage } = route.params;
     const { url } = useSelector((state) => state.urlReducer);
+
+    const [imageFile, setImageFile] = useState();
     const imageUrl = url + "storage/static/images/" + qImage;
     const [spinner, setSpinner] = useState(false);
+    const [data, setData] = useState([]);
+    const isFocused = useIsFocused();
+
+    const [question, setQuestion] = useState("");
+    const [answer, setAnswer] = useState("");
 
     // const url = "http://192.168.43.203:8000/api/entries";
+
+    const fetch = async () => {
+        setSpinner(true);
+        const response = await axios(url + "api/entries/" + qId, {
+            headers: {
+                Accept: "application/json",
+            },
+        })
+            .then((res) => {
+                const result = res.data.data;
+                setData(result);
+                setQuestion(result.attributes.question);
+                setAnswer(result.attributes.answer);
+                setSpinner(false);
+            })
+            .catch((error) => {
+                alert(error);
+                setSpinner(false);
+            });
+    };
+
+    useEffect(() => {
+        isFocused && fetch();
+    }, [isFocused]);
+
+    const handleEditQuestion = () => {
+        navigation.navigate("EditQuestion", {
+            qQuestion: qQuestion,
+            qAnswer: qAnswer,
+            qId: qId,
+        });
+    };
 
     const handleDeleteQuestion = async () => {
         Alert.alert(
@@ -75,56 +116,64 @@ export default function Questions({ route, navigation }) {
     };
 
     return (
-        <View className="h-full w-full">
-            <Spinner
-                visible={spinner}
-                textContent={"Loading..."}
-                textStyle={{ color: "#fff" }}
-                overlayColor="rgba(0, 0, 0, 0.30)"
-            />
-            <View className="py-4 absolute inset-x-0 bottom-0 flex justify-center mb-6 px-5">
-                <Button
-                    title="Delete Question"
-                    onPress={handleDeleteQuestion}
+        <ScrollView>
+            <View className="h-full w-full py-4">
+                <Spinner
+                    visible={spinner}
+                    textContent={"Loading..."}
+                    textStyle={{ color: "#fff" }}
+                    overlayColor="rgba(0, 0, 0, 0.30)"
                 />
-            </View>
-            <View className="mt-4 px-5">
-                <View className="mt-2 bg-slate-700 rounded-lg">
-                    <View className="p-4">
-                        <Text className="font-bold text-2xl text-center text-white">
-                            Q:
-                        </Text>
-                        <Text className="font-bold text-lg text-white text-center">
-                            {qQuestion}
-                        </Text>
+                <View className="px-5">
+                    <View className="mt-2 bg-slate-700 rounded-lg">
+                        <View className="p-4">
+                            <Text className="font-bold text-2xl text-center text-white">
+                                Q:
+                            </Text>
+                            <Text className="font-bold text-lg text-white text-center">
+                                {question}
+                            </Text>
+                        </View>
                     </View>
-                </View>
-                <View className="mt-4 bg-slate-700 rounded-lg">
-                    <View className="p-4">
-                        <Text className="font-bold text-2xl text-center text-white">
-                            A:
-                        </Text>
-                        <Text className="font-bold text-lg text-white text-center">
-                            {qAnswer}
-                        </Text>
+                    <View className="mt-4 bg-slate-700 rounded-lg">
+                        <View className="p-4">
+                            <Text className="font-bold text-2xl text-center text-white">
+                                A:
+                            </Text>
+                            <Text className="font-bold text-lg text-white text-center">
+                                {answer}
+                            </Text>
+                        </View>
                     </View>
-                </View>
-                {qImage == null ? null : (
-                    <View className="flex items-center mt-4 rounded-lg w-full">
-                        <Image
-                            className="rounded-lg shadow-sm"
-                            style={{
-                                width: "69%",
-                                height: undefined,
-                                aspectRatio: 1,
-                            }}
-                            source={{
-                                uri: imageUrl,
-                            }}
+                    {qImage == null ? null : (
+                        <View className="flex items-center mt-4 rounded-lg w-full">
+                            <Image
+                                className="rounded-lg shadow-sm"
+                                style={{
+                                    width: "69%",
+                                    height: undefined,
+                                    aspectRatio: 1,
+                                }}
+                                source={{
+                                    uri: imageUrl,
+                                }}
+                            />
+                        </View>
+                    )}
+                    <View className="mt-4">
+                        <Button
+                            title="Edit Question"
+                            onPress={handleEditQuestion}
                         />
                     </View>
-                )}
+                    <View className="mt-2">
+                        <DeleteButton
+                            title="Delete Question"
+                            onPress={handleDeleteQuestion}
+                        />
+                    </View>
+                </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }

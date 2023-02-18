@@ -4,6 +4,7 @@ import Home from "./screens/Home";
 import Questions from "./screens/Questions";
 import Question from "./screens/Question";
 import AddQuestions from "./screens/AddQuestions";
+import EditQuestion from "./screens/EditQuestion";
 import Settings from "./screens/Settings";
 
 import { faAdd, faCog, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -48,6 +49,13 @@ export default function App() {
                         component={AddQuestions}
                         options={{
                             title: "Add a Question",
+                        }}
+                    />
+                    <Stack.Screen
+                        name="EditQuestion"
+                        component={EditQuestion}
+                        options={{
+                            title: "Edit Question",
                         }}
                     />
                     <Stack.Screen name="Settings" component={Settings} />

@@ -142,6 +142,7 @@ export default function Home({ navigation }) {
                             })
                         }
                     />
+                    <Text>{url}</Text>
                 </View>
             </ScrollView>
         </View>
