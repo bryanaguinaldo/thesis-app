@@ -8,6 +8,7 @@ export default function InputText(props) {
                 maxLength={150}
                 value={props.value == null ? null : props.value}
                 multiline={props.multiline == null ? false : props.multiline}
+                style={{ fontFamily: "Poppins" }}
             />
         </View>
     );

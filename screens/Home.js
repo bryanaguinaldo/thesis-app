@@ -7,6 +7,8 @@ import {
     RefreshControl,
 } from "react-native";
 
+import { useFonts } from "expo-font";
+
 import Banner from "../components/Banner";
 import Subject from "../components/Subject";
 import Question from "../components/Question";
@@ -26,6 +28,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setUrl } from "../redux/actions";
 
 export default function Home({ navigation }) {
+    let [fontsLoaded] = useFonts({
+        Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
+        "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
+    });
+
     const [refreshing, setRefreshing] = React.useState(false);
     const [spinner, setSpinner] = useState(false);
 
@@ -109,7 +116,10 @@ export default function Home({ navigation }) {
                     description="Learning Assistant Device Mobile App!"
                 />
                 <View className="mt-4 px-5">
-                    <Text className="mb-2 text-sm uppercase text-slate-500 font-bold flex-start">
+                    <Text
+                        className="mb-2 text-sm uppercase text-slate-500 flex-start"
+                        style={{ fontFamily: "Poppins-Bold" }}
+                    >
                         Subjects
                     </Text>
                     <Subject

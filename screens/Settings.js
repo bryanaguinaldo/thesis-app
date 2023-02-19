@@ -118,7 +118,9 @@ export default function Settings({ route, navigation }) {
                         justifyContent: "space-between",
                     }}
                 >
-                    <Text>Use Custom URL for Offline Mode</Text>
+                    <Text style={{ fontFamily: "Poppins" }}>
+                        Use Custom URL for Offline Mode
+                    </Text>
                     <Switch
                         onValueChange={toggleSwitch}
                         value={isEnabled}
@@ -133,7 +135,10 @@ export default function Settings({ route, navigation }) {
                     display: isEnabled ? "flex" : "none",
                 }}
             >
-                <Text className="uppercase font-bold text-slate-700">
+                <Text
+                    className="uppercase text-slate-700"
+                    style={{ fontFamily: "Poppins-Bold" }}
+                >
                     URL/IP Address:
                 </Text>
                 <TextInput onChangeText={(val) => setIp(val)} />

@@ -127,20 +127,32 @@ export default function Questions({ route, navigation }) {
                 <View className="px-5">
                     <View className="mt-2 bg-slate-700 rounded-lg">
                         <View className="p-4">
-                            <Text className="font-bold text-2xl text-center text-white">
+                            <Text
+                                className="text-2xl text-center text-white"
+                                style={{ fontFamily: "Poppins-Bold" }}
+                            >
                                 Q:
                             </Text>
-                            <Text className="font-bold text-lg text-white text-center">
+                            <Text
+                                className="text-lg text-white text-center"
+                                style={{ fontFamily: "Poppins-Bold" }}
+                            >
                                 {question}
                             </Text>
                         </View>
                     </View>
                     <View className="mt-4 bg-slate-700 rounded-lg">
                         <View className="p-4">
-                            <Text className="font-bold text-2xl text-center text-white">
+                            <Text
+                                className="text-2xl text-center text-white"
+                                style={{ fontFamily: "Poppins-Bold" }}
+                            >
                                 A:
                             </Text>
-                            <Text className="font-bold text-lg text-white text-center">
+                            <Text
+                                className="text-lg text-white text-center"
+                                style={{ fontFamily: "Poppins-Bold" }}
+                            >
                                 {answer}
                             </Text>
                         </View>

@@ -27,12 +27,20 @@ export default function Subject(props) {
                                 alignItems: "center",
                             }}
                         >
-                            <Text className="font-bold capitalize w-3/4">
+                            <Text
+                                className="capitalize w-3/4"
+                                style={{ fontFamily: "Poppins-Bold" }}
+                            >
                                 {props.title == null
                                     ? "Undefined"
                                     : props.title}
                             </Text>
-                            <Text style={{ justifyContent: "flex-end" }}>
+                            <Text
+                                style={{
+                                    justifyContent: "flex-end",
+                                    fontFamily: "Poppins",
+                                }}
+                            >
                                 {props.entries} / 20
                             </Text>
                         </View>

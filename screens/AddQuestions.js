@@ -138,23 +138,37 @@ export default function AddQuestions({ route, navigation }) {
             />
             <View className="mt-4 px-5">
                 <View className="py-2">
-                    <Text className="text-sm uppercase text-slate-700 font-bold">
+                    <Text
+                        className="text-sm uppercase text-slate-700"
+                        style={{ fontFamily: "Poppins-Bold" }}
+                    >
                         Question *
                     </Text>
                     <TextInput onChangeText={(val) => setQuestion(val)} />
                 </View>
                 <View className="py-2">
-                    <Text className="text-sm uppercase text-slate-700 font-bold">
+                    <Text
+                        className="text-sm uppercase text-slate-700"
+                        style={{ fontFamily: "Poppins-Bold" }}
+                    >
                         Answer *
                     </Text>
                     <TextInput onChangeText={(val) => setAnswer(val)} />
                 </View>
                 <View className="py-2">
-                    <Text className="text-sm uppercase text-slate-700 font-bold">
+                    <Text
+                        className="text-sm uppercase text-slate-700"
+                        style={{ fontFamily: "Poppins-Bold" }}
+                    >
                         Attachment
                     </Text>
                     {!isFileChosen ? (
-                        <Text className="my-2">No File Chosen</Text>
+                        <Text
+                            className="my-2"
+                            style={{ fontFamily: "Poppins" }}
+                        >
+                            No File Chosen
+                        </Text>
                     ) : (
                         <View className="my-4 rounded-lg w-full">
                             <Image
