@@ -95,7 +95,7 @@ export default function Questions({ route, navigation }) {
     }, [fetch]);
 
     return (
-        <View className="h-full w-full">
+        <View className="h-full w-ful bg-white">
             <Spinner
                 visible={spinner}
                 textContent={"Loading..."}

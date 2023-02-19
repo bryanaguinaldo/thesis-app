@@ -116,7 +116,7 @@ export default function Questions({ route, navigation }) {
     };
 
     return (
-        <ScrollView>
+        <ScrollView className="bg-white">
             <View className="h-full w-full py-4">
                 <Spinner
                     visible={spinner}
