@@ -92,7 +92,7 @@ export default function Questions({ route, navigation }) {
             setRefreshing(false);
         }, 1000);
         fetch();
-    }, []);
+    }, [fetch]);
 
     return (
         <View className="h-full w-full">

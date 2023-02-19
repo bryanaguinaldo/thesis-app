@@ -29,14 +29,6 @@ export default function Home({ navigation }) {
     const [refreshing, setRefreshing] = React.useState(false);
     const [spinner, setSpinner] = useState(false);
 
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 100);
-        fetch();
-    }, []);
-
     const isFocused = useIsFocused();
     const [data, setData] = useState([]);
     const [englishCount, setEnglishCount] = useState(0);
@@ -76,6 +68,14 @@ export default function Home({ navigation }) {
                 setSpinner(false);
             });
     };
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 100);
+        fetch();
+    }, [fetch]);
 
     useEffect(() => {
         isFocused && fetch();
