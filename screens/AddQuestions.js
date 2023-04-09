@@ -107,7 +107,7 @@ export default function AddQuestions({ route, navigation }) {
         if (!result.canceled) {
             const resizedPhoto = await ImageManipulator.manipulateAsync(
                 result.assets[0].uri,
-                [{ resize: { width: 250, height: 250 } }],
+                [{ resize: { width: 369, height: 369 } }],
                 { compress: 0.7, format: "jpeg" }
             );
 
