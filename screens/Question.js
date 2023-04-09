@@ -20,6 +20,7 @@ export default function Questions({ route, navigation }) {
 
     const [imageFile, setImageFile] = useState();
     const imageUrl = url + "storage/static/images/" + qImage;
+    const [imageUrl2, setImageUrl2] = useState("");
     const [spinner, setSpinner] = useState(false);
     const [data, setData] = useState([]);
     const isFocused = useIsFocused();
@@ -41,6 +42,9 @@ export default function Questions({ route, navigation }) {
                 setData(result);
                 setQuestion(result.attributes.question);
                 setAnswer(result.attributes.answer);
+                setImageUrl2(
+                    url + "storage/static/images/" + result.attributes.file
+                );
                 setSpinner(false);
             })
             .catch((error) => {
@@ -157,7 +161,7 @@ export default function Questions({ route, navigation }) {
                             </Text>
                         </View>
                     </View>
-                    {qImage == null ? null : (
+                    {qImage == null ? null : !imageUrl2 ? null : (
                         <View className="flex items-center mt-4 rounded-lg w-full">
                             <Image
                                 className="rounded-lg shadow-sm"
@@ -167,7 +171,7 @@ export default function Questions({ route, navigation }) {
                                     aspectRatio: 1,
                                 }}
                                 source={{
-                                    uri: imageUrl,
+                                    uri: imageUrl2,
                                 }}
                             />
                         </View>

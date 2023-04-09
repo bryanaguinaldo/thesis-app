@@ -41,7 +41,7 @@ export default function AddQuestions({ route, navigation }) {
             formData.append("question", question);
             formData.append("answer", answer);
             if (image !== null) {
-                let uri = image.uri;
+                let uri = imageUrl;
                 let fileName = uri.split("/").pop();
 
                 let match = /\.(\w+)$/.exec(fileName);
@@ -108,7 +108,7 @@ export default function AddQuestions({ route, navigation }) {
             const resizedPhoto = await ImageManipulator.manipulateAsync(
                 result.assets[0].uri,
                 [{ resize: { width: 250, height: 250 } }],
-                { compress: 0.5, format: "jpeg" }
+                { compress: 0.7, format: "jpeg" }
             );
 
             console.log(resizedPhoto.uri);

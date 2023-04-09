@@ -14,6 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { setUrl } from "../redux/actions";
 import UploadImageButton from "../components/UploadImageButton";
+import * as ImageManipulator from "expo-image-manipulator";
 
 export default function AddQuestions({ route, navigation }) {
     const { subject, qQuestion, qAnswer, qId } = route.params;
@@ -36,7 +37,7 @@ export default function AddQuestions({ route, navigation }) {
             formData.append("question", question);
             formData.append("answer", answer);
             if (image != null) {
-                let uri = image.uri;
+                let uri = imageUrl;
                 let fileName = uri.split("/").pop();
 
                 let match = /\.(\w+)$/.exec(fileName);
@@ -70,22 +71,31 @@ export default function AddQuestions({ route, navigation }) {
 
     const handleImagePicker = async () => {
         // No permissions request is necessary for launching the image library
+        setSpinner(true);
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 0.5,
+            quality: 1,
+            base64: true,
         }).catch(function (error) {
             console.log(error);
         });
 
         if (!result.canceled) {
+            const resizedPhoto = await ImageManipulator.manipulateAsync(
+                result.assets[0].uri,
+                [{ resize: { width: 250, height: 250 } }],
+                { compress: 0.7, format: "jpeg" }
+            );
+
+            console.log(resizedPhoto.uri);
+
             setImage(result.assets[0]);
-            setImageUrl(result.assets[0].uri);
+            setImageUrl(resizedPhoto.uri);
             setIsFileChosen(true);
-        } else {
-            return 0;
         }
+        setSpinner(false);
     };
 
     return (

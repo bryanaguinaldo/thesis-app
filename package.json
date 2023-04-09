@@ -1,6 +1,6 @@
 {
-    "name": "mobile-app",
-    "version": "1.0.0",
+    "name": "study-buddy",
+    "version": "6.9.27",
     "main": "node_modules/expo/AppEntry.js",
     "scripts": {
         "start": "expo start",
