@@ -1,7 +1,7 @@
 import { SET_URL } from "./actions";
 
 const initialState = {
-    url: "http://20.125.139.137:8114/",
+    url: "http://20.2.83.132/",
 };
 
 function urlReducer(state = initialState, action) {

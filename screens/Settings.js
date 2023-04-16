@@ -28,7 +28,7 @@ export default function Settings({ route, navigation }) {
         if (isEnabled === false) {
             setSpinner(true);
             const response = await axios
-                .get("http://20.125.139.137:8114/api/verify/server_validity", {
+                .get("http://20.2.83.132/api/verify/server_validity", {
                     headers: {
                         Accept: "application/json",
                     },
@@ -43,11 +43,7 @@ export default function Settings({ route, navigation }) {
                                 {
                                     text: "OK",
                                     onPress: () => {
-                                        dispatch(
-                                            setUrl(
-                                                "http://20.125.139.137:8114/"
-                                            )
-                                        );
+                                        dispatch(setUrl("http://20.2.83.132/"));
                                         navigation.goBack();
                                     },
                                 },
